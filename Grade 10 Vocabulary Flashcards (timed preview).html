@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Grade 10 Vocabulary Flashcards</title>
+<style>
+:root{
+  --bg:#f4f6fb;--card:#ffffff;--text:#1d2433;--muted:#667085;--primary:#4f46e5;--primary-text:#ffffff;
+  --ok:#16a34a;--ok-bg:#dcfce7;--bad:#dc2626;--bad-bg:#fee2e2;--warn:#d97706;--warn-bg:#fef3c7;--border:#e2e6ef;--pic:#eef2ff;
+  --gold:#f5b301;--silver:#9aa4b2;--bronze:#c2773a;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f1420;--card:#1a2130;--text:#eef1f8;--muted:#9aa4b8;--primary:#818cf8;--primary-text:#0f1420;
+    --ok:#4ade80;--ok-bg:#12351f;--bad:#f87171;--bad-bg:#3d1717;--warn:#fbbf24;--warn-bg:#3b2a08;--border:#2b3448;--pic:#232b44;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f1420;--card:#1a2130;--text:#eef1f8;--muted:#9aa4b8;--primary:#818cf8;--primary-text:#0f1420;
+  --ok:#4ade80;--ok-bg:#12351f;--bad:#f87171;--bad-bg:#3d1717;--warn:#fbbf24;--warn-bg:#3b2a08;--border:#2b3448;--pic:#232b44;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.4;-webkit-tap-highlight-color:transparent}
+#app{max-width:520px;margin:0 auto;padding:16px 16px 40px}
+h1{font-size:1.5rem;margin:8px 0 4px}
+h2{font-size:1.2rem;margin:0 0 8px}
+p{margin:6px 0}
+.muted{color:var(--muted);font-size:.9rem}
+.card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:18px;margin:14px 0;box-shadow:0 2px 10px rgba(0,0,0,.04);position:relative}
+label.f{display:block;font-weight:600;margin:14px 0 6px}
+input[type=text],input[type=password]{width:100%;padding:13px 14px;font-size:1rem;border:2px solid var(--border);border-radius:12px;background:var(--bg);color:var(--text);font-family:inherit}
+input:focus{outline:none;border-color:var(--primary)}
+.avatars{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+.av{font-size:1.7rem;padding:8px 0;border-radius:14px;border:2px solid var(--border);background:var(--bg);cursor:pointer;text-align:center}
+.av.sel{border-color:var(--primary);background:var(--pic);transform:scale(1.06)}
+.seg{display:flex;gap:10px}
+.seg button{flex:1}
+button{font-family:inherit;font-size:1rem;cursor:pointer}
+.btn{width:100%;padding:14px;border-radius:14px;border:none;background:var(--primary);color:var(--primary-text);font-weight:700;margin-top:14px}
+.btn:disabled{opacity:.6}
+.btn.ghost{background:transparent;color:var(--primary);border:2px solid var(--primary)}
+.btn.sm{width:auto;padding:9px 14px;font-size:.9rem;margin-top:0}
+.choice{padding:13px;border-radius:14px;border:2px solid var(--border);background:var(--bg);color:var(--text);font-weight:600}
+.choice.sel{border-color:var(--primary);background:var(--pic);color:var(--text)}
+.err{color:var(--bad);font-size:.9rem;min-height:1.2em;margin-top:8px}
+.topbar{display:flex;justify-content:space-between;align-items:center;font-size:.9rem;color:var(--muted);gap:8px}
+.bar{height:8px;background:var(--border);border-radius:99px;overflow:hidden;margin:8px 0 4px}
+.bar>i{display:block;height:100%;background:var(--primary);border-radius:99px;transition:width .3s}
+.tag{display:inline-block;font-size:.75rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:4px 10px;border-radius:99px;background:var(--pic);color:var(--primary)}
+.pic{width:100%;max-width:420px;aspect-ratio:200/140;margin:12px auto;border-radius:16px;overflow:hidden;background:var(--pic)}
+.pic svg{display:block;width:100%;height:100%}
+.pic.mini{max-width:210px;margin:8px 0}
+.opts{display:grid;gap:10px}
+.opt{text-align:left;padding:14px 15px;border-radius:14px;border:2px solid var(--border);background:var(--bg);color:var(--text);font-weight:600}
+.opt.def{font-weight:500;font-size:.98rem}
+.opt.pick{border-color:var(--primary);background:var(--pic)}
+.opt:disabled{cursor:default;opacity:1}
+.word{font-size:2rem;font-weight:800;text-align:center;margin:14px 0 10px;color:var(--primary)}
+.tline{display:flex;align-items:center;gap:10px;margin:10px 0 2px}
+.tbar{flex:1;height:12px;background:var(--border);border-radius:99px;overflow:hidden}
+.tbar>i{display:block;height:100%;width:100%;background:var(--ok);border-radius:99px}
+.tbar>i.mid{background:var(--warn)}.tbar>i.low{background:var(--bad)}
+.tnum{font-weight:800;font-size:1.3rem;min-width:1.6em;text-align:right}
+.up{position:absolute;inset:0;border-radius:18px;background:rgba(220,38,38,.93);color:#fff;display:none;align-items:center;justify-content:center;flex-direction:column;font-size:1.8rem;font-weight:800;z-index:5}
+.up small{font-size:.95rem;font-weight:600;margin-top:6px}
+.score{font-size:3.2rem;font-weight:800;text-align:center;margin:4px 0}
+.center{text-align:center}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.podium{display:grid;grid-template-columns:1fr 1.15fr 1fr;gap:8px;align-items:end;margin:16px 0}
+.pod{border-radius:16px;padding:12px 6px;text-align:center;background:var(--card);border:2px solid var(--border)}
+.pod .m{font-size:1.8rem}.pod .a{font-size:2rem}.pod .n{font-weight:700;word-break:break-word}.pod .s{font-weight:800;font-size:1.1rem}
+.pod.p1{border-color:var(--gold);padding-bottom:26px}.pod.p2{border-color:var(--silver)}.pod.p3{border-color:var(--bronze)}
+.lb{display:flex;align-items:center;gap:10px;padding:10px 4px}
+.lb .r{width:26px;font-weight:800;color:var(--muted)}.lb .a{font-size:1.5rem}.lb .n{flex:1;font-weight:600}
+.lb .s{font-weight:800}
+details{border-bottom:1px solid var(--border)}details:last-child{border:none}
+summary{list-style:none;cursor:pointer}summary::-webkit-details-marker{display:none}
+.det{padding:0 4px 12px;font-size:.9rem}
+.tabs{display:flex;gap:8px;margin:10px 0}
+.tabs button{flex:1;padding:10px;border-radius:12px;border:2px solid var(--border);background:var(--bg);color:var(--text);font-weight:700}
+.tabs button.on{border-color:var(--primary);background:var(--pic);color:var(--primary)}
+.link{background:none;border:none;color:var(--muted);text-decoration:underline;padding:8px;font-size:.85rem}
+.note{background:var(--pic);border-radius:12px;padding:10px 12px;font-size:.9rem;margin-top:10px}
+.note.warn{background:var(--warn-bg)}.note.ok{background:var(--ok-bg)}.note.bad{background:var(--bad-bg)}
+.rules{padding-left:20px;margin:8px 0}.rules li{margin:8px 0}
+.rv{border:1px solid var(--border);border-radius:14px;padding:12px;margin:10px 0;background:var(--bg)}
+.rv .yours{color:var(--bad);font-weight:600;margin-top:6px}.rv .right{color:var(--ok);font-weight:600;margin-top:6px}
+.chip{display:inline-block;border-radius:99px;padding:3px 10px;font-size:.78rem;font-weight:700;margin-left:6px}
+.chip.ok{background:var(--ok-bg)}.chip.bad{background:var(--bad-bg)}.chip.warn{background:var(--warn-bg)}
+.prog{height:6px;background:var(--border);border-radius:99px;overflow:hidden;margin-top:6px}.prog>i{display:block;height:100%;background:var(--primary)}
+.sec{font-weight:800;margin:18px 0 6px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+/* ---------------- ILLUSTRATIONS (simple flat SVG scenes) ---------------- */
+const SK=["#f2c9a0","#c68642","#8d5524","#e0ac69","#ffdbb4"];
+function P(x,y,o){
+  o=o||{};
+  const c=o.c||"#4f46e5",sk=o.sk||SK[0],s=o.s||1,m=o.m||"happy",hair=o.hair||"#3b2f2f";
+  const faces={
+    happy:'<path d="M-4 -19 Q0 -15 4 -19" stroke="#333" stroke-width="1.5" fill="none"/>',
+    sad:'<path d="M-4 -16 Q0 -20 4 -16" stroke="#333" stroke-width="1.5" fill="none"/>',
+    angry:'<path d="M-4 -16 Q0 -19 4 -16" stroke="#333" stroke-width="1.5" fill="none"/><path d="M-7 -30 L-2 -27 M7 -30 L2 -27" stroke="#333" stroke-width="1.8"/>',
+    worried:'<path d="M-4 -17 Q-2 -19 0 -17 Q2 -15 4 -17" stroke="#333" stroke-width="1.5" fill="none"/><path d="M-7 -28 L-2 -30 M7 -28 L2 -30" stroke="#333" stroke-width="1.5"/>',
+    calm:'<path d="M-3 -18 H3" stroke="#333" stroke-width="1.5"/>',
+    talk:'<ellipse cx="0" cy="-17.5" rx="3" ry="2.6" fill="#7f1d1d"/>'
+  };
+  return '<g transform="translate('+x+' '+y+') scale('+s+')"><rect x="-9" y="17" width="7" height="15" rx="3" fill="#374151"/><rect x="2" y="17" width="7" height="15" rx="3" fill="#374151"/><rect x="-12" y="-11" width="24" height="32" rx="10" fill="'+c+'"/><circle cx="0" cy="-22" r="10" fill="'+sk+'"/><path d="M-10 -24 Q0 -38 10 -24 Q0 -29 -10 -24" fill="'+hair+'"/><circle cx="-3.5" cy="-24" r="1.3" fill="#333"/><circle cx="3.5" cy="-24" r="1.3" fill="#333"/>'+faces[m]+(o.extra||"")+'</g>';
+}
+const GR='<rect y="112" width="200" height="28" fill="#d5e0f2"/>';
+const svg=(inner,bg)=>'<svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Picture clue"><rect width="200" height="140" fill="'+(bg||"#eef3ff")+'"/>'+inner+'</svg>';
+const line=(d,c,w)=>'<path d="'+d+'" stroke="'+c+'" stroke-width="'+(w||6)+'" stroke-linecap="round" fill="none"/>';
+
+const ART={
+Discriminate:()=>svg(GR+P(28,80,{c:"#ef4444"})+P(56,80,{c:"#10b981",sk:SK[1]})+P(84,80,{c:"#f59e0b",sk:SK[2]})+line("M38 78 L46 78 M66 78 L74 78","#f2c9a0",5)+
+  '<path d="M122 20 V112" stroke="#ef4444" stroke-width="3" stroke-dasharray="6 5"/><circle cx="122" cy="30" r="14" fill="#fff" stroke="#ef4444" stroke-width="4"/><path d="M112 40 L132 20" stroke="#ef4444" stroke-width="4"/>'+
+  P(163,80,{c:"#6b7280",m:"sad",sk:SK[3]})),
+Diverse:()=>svg(GR+P(28,80,{c:"#ef4444",sk:SK[0],s:1})+P(64,80,{c:"#0ea5e9",sk:SK[1],s:.92,hair:"#111"})+P(100,80,{c:"#a855f7",sk:SK[2],s:1.05,hair:"#111"})+P(136,80,{c:"#22c55e",sk:SK[3],s:.95,hair:"#7c2d12"})+P(172,80,{c:"#f59e0b",sk:SK[4],s:1,hair:"#facc15"})),
+Inhibit:()=>svg(GR+'<g transform="rotate(12 45 80)">'+P(45,80,{c:"#3b82f6"})+'</g>'+line("M38 74 L26 84 M52 72 L66 66","#3b82f6",5)+line("M8 70 H22 M6 82 H18 M10 94 H22","#94a3b8",3)+
+  '<rect x="112" y="70" width="6" height="42" fill="#6b7280"/><rect x="170" y="70" width="6" height="42" fill="#6b7280"/><rect x="108" y="68" width="72" height="12" fill="#fff" stroke="#ef4444" stroke-width="2"/><path d="M118 68 L128 80 M138 68 L148 80 M158 68 L168 80" stroke="#ef4444" stroke-width="5"/>'+
+  '<polygon points="130,10 152,10 164,22 164,44 152,56 130,56 118,44 118,22" fill="#dc2626" stroke="#fff" stroke-width="2"/><text x="141" y="37" font-size="12" font-weight="700" fill="#fff" text-anchor="middle" font-family="sans-serif">STOP</text>'),
+Intervene:()=>svg(GR+P(32,80,{c:"#ef4444",m:"angry"})+P(168,80,{c:"#8b5cf6",m:"angry",sk:SK[1]})+P(100,80,{c:"#0ea5e9",m:"calm",sk:SK[3]})+line("M90 72 L64 60 M110 72 L136 60","#0ea5e9",6)+'<circle cx="62" cy="59" r="5" fill="#e0ac69"/><circle cx="138" cy="59" r="5" fill="#e0ac69"/>'+'<text x="50" y="40" fill="#ef4444" font-size="18" font-weight="700" font-family="sans-serif">!</text><text x="146" y="40" fill="#ef4444" font-size="18" font-weight="700" font-family="sans-serif">!</text>'),
+Rational:()=>svg(GR+P(45,80,{c:"#0ea5e9",m:"calm"})+'<circle cx="72" cy="66" r="4" fill="#fff" stroke="#cbd5e1"/><circle cx="80" cy="56" r="6" fill="#fff" stroke="#cbd5e1"/><ellipse cx="135" cy="45" rx="55" ry="34" fill="#fff" stroke="#cbd5e1" stroke-width="2"/>'+
+  '<path d="M135 22 V62" stroke="#475569" stroke-width="3"/><rect x="123" y="60" width="24" height="5" rx="2" fill="#475569"/><path d="M117 28 H153" stroke="#475569" stroke-width="3"/><path d="M117 28 L105 44 M117 28 L129 44 M153 28 L141 44 M153 28 L165 44" stroke="#475569" stroke-width="1.5"/><path d="M105 44 H129 Q117 55 105 44Z M141 44 H165 Q153 55 141 44Z" fill="#f59e0b"/>'),
+Superimpose:()=>svg('<rect x="15" y="15" width="105" height="75" fill="#bfe3ff" stroke="#64748b" stroke-width="2"/><circle cx="36" cy="34" r="9" fill="#fbbf24"/><polygon points="15,90 55,45 85,90" fill="#6b8e6b"/><polygon points="60,90 90,55 120,90" fill="#557a55"/>'+
+  '<rect x="75" y="45" width="110" height="80" fill="#fde68a" opacity=".55" stroke="#64748b" stroke-width="2"/><rect x="150" y="88" width="8" height="30" fill="#7c4a21"/><circle cx="154" cy="76" r="18" fill="#22a06b"/><rect x="100" y="92" width="28" height="22" fill="#ef6c5b"/><polygon points="96,92 114,76 132,92" fill="#7f1d1d"/>'),
+Poignant:()=>svg(GR+P(60,82,{c:"#64748b",m:"sad"})+'<path d="M66 63 q-3 5 0 7 q3 -2 0 -7z" fill="#60a5fa"/>'+line("M52 80 L84 88 M68 80 L88 86","#64748b",5)+'<circle cx="88" cy="88" r="4" fill="#f2c9a0"/>'+
+  '<g transform="rotate(-6 100 88)"><rect x="86" y="74" width="40" height="32" fill="#fef3c7" stroke="#a16207" stroke-width="3"/><circle cx="100" cy="88" r="4" fill="#a16207"/><rect x="96" y="92" width="8" height="10" fill="#a16207"/><circle cx="114" cy="88" r="4" fill="#a16207"/><rect x="110" y="92" width="8" height="10" fill="#a16207"/></g>'+
+  '<path d="M155 56 C135 42 145 28 155 38 C165 28 175 42 155 56Z" fill="#f87171"/><path d="M155 38 L151 46 L157 49 L153 56" stroke="#fff" stroke-width="2" fill="none"/>'),
+Rift:()=>svg('<polygon points="0,60 70,60 78,140 0,140" fill="#b08968"/><rect x="0" y="60" width="70" height="7" fill="#6a994e"/><polygon points="130,60 200,60 200,140 122,140" fill="#b08968"/><rect x="130" y="60" width="70" height="7" fill="#6a994e"/><polygon points="70,67 130,67 122,140 78,140" fill="#1e293b"/><path d="M80 90 L92 100 L84 112 L98 122" stroke="#475569" stroke-width="2" fill="none"/>'+
+  P(38,35,{c:"#3b82f6",m:"sad",s:.8})+P(162,35,{c:"#ef4444",m:"sad",s:.8,sk:SK[1]})),
+Vignettes:()=>{
+  const fr=(x,inner,bg)=>'<rect x="'+x+'" y="38" width="56" height="64" fill="'+bg+'"/>'+inner;
+  let holes="";for(let i=0;i<9;i++){holes+='<rect x="'+(9+i*21)+'" y="29" width="8" height="6" rx="1" fill="#e5e7eb"/><rect x="'+(9+i*21)+'" y="105" width="8" height="6" rx="1" fill="#e5e7eb"/>'}
+  return svg('<rect x="3" y="24" width="194" height="92" fill="#1f2937"/>'+holes+
+  fr(12,'<circle cx="52" cy="56" r="7" fill="#fbbf24"/><path d="M12 102 Q40 66 68 102Z" fill="#6aa84f"/>',"#bfe3ff")+
+  fr(72,'<ellipse cx="100" cy="90" rx="20" ry="4" fill="#cbd5e1"/><rect x="90" y="70" width="20" height="18" rx="4" fill="#fff" stroke="#92400e" stroke-width="2"/><path d="M110 74 q9 0 9 7 q0 6 -9 6" stroke="#92400e" stroke-width="2" fill="none"/><path d="M95 66 q-3 -6 0 -10 M102 66 q-3 -6 0 -10" stroke="#94a3b8" stroke-width="2" fill="none"/>',"#fef3c7")+
+  fr(132,P(160,70,{c:"#ec4899",s:.85}),"#e0e7ff"),"#111827");
+},
+Wizened:()=>svg('<path d="M50 140 Q56 104 100 98 Q144 104 150 140Z" fill="#7c3aed"/><rect x="92" y="84" width="16" height="18" fill="#d9b48f"/><circle cx="100" cy="62" r="30" fill="#e8c39e"/><circle cx="76" cy="40" r="8" fill="#f1f5f9"/><circle cx="124" cy="40" r="8" fill="#f1f5f9"/><circle cx="70" cy="56" r="7" fill="#f1f5f9"/><circle cx="130" cy="56" r="7" fill="#f1f5f9"/><path d="M78 36 Q100 24 122 36" stroke="#f1f5f9" stroke-width="7" fill="none"/>'+
+  '<path d="M82 47 q18 -6 36 0 M84 53 q16 -5 32 0" stroke="#b58a63" stroke-width="1.6" fill="none"/><path d="M87 63 q5 4 10 0 M103 63 q5 4 10 0" stroke="#333" stroke-width="2" fill="none"/><path d="M80 62 l-6 -3 M80 66 l-6 2 M120 62 l6 -3 M120 66 l6 2" stroke="#b58a63" stroke-width="1.5"/><path d="M100 64 q-5 10 2 11" stroke="#b58a63" stroke-width="2" fill="none"/><path d="M78 76 q4 7 9 9 M122 76 q-4 7 -9 9" stroke="#b58a63" stroke-width="1.5" fill="none"/><path d="M90 84 q10 4 20 0" stroke="#7f3b2a" stroke-width="2.4" fill="none"/>'+
+  '<circle cx="91" cy="62" r="9" fill="none" stroke="#475569" stroke-width="2"/><circle cx="109" cy="62" r="9" fill="none" stroke="#475569" stroke-width="2"/>'),
+Collectives:()=>svg('<rect y="86" width="200" height="54" fill="#86c06a"/><path d="M0 100 H200 M0 114 H200 M0 128 H200" stroke="#5f9646" stroke-width="3"/><rect x="142" y="46" width="48" height="44" fill="#c0392b"/><polygon points="136,48 166,22 196,48" fill="#7f1d1d"/><rect x="158" y="64" width="16" height="26" fill="#fff" stroke="#7f1d1d" stroke-width="2"/><path d="M158 64 L174 90 M174 64 L158 90" stroke="#7f1d1d" stroke-width="2"/>'+
+  P(28,72,{c:"#ef4444",s:.8})+P(62,72,{c:"#0ea5e9",s:.8,sk:SK[1]})+P(96,72,{c:"#a855f7",s:.8,sk:SK[3]})+line("M36 70 L56 74 M70 72 L90 74","#f2c9a0",4)+
+  '<rect x="34" y="100" width="70" height="22" fill="#d9a441" stroke="#92651a" stroke-width="2"/><circle cx="48" cy="98" r="6" fill="#dc2626"/><circle cx="62" cy="96" r="6" fill="#f97316"/><circle cx="76" cy="98" r="6" fill="#dc2626"/><circle cx="90" cy="96" r="6" fill="#84cc16"/>'),
+"Broil out (verb)":()=>svg('<rect x="30" y="12" width="140" height="116" rx="8" fill="#e5e7eb" stroke="#6b7280" stroke-width="3"/><rect x="42" y="24" width="116" height="90" fill="#1f2937"/><path d="M50 34 H150" stroke="#fca5a5" stroke-width="11" opacity=".5" stroke-linecap="round"/><path d="M50 34 H150" stroke="#ef4444" stroke-width="5" stroke-linecap="round"/>'+
+  [62,82,102,122,142].map(x=>'<path d="M'+x+' 44 q6 6 0 12 q-6 6 0 12" stroke="#f97316" stroke-width="2.5" fill="none" stroke-linecap="round"/>').join("")+
+  '<path d="M48 96 H152" stroke="#9ca3af" stroke-width="3"/><ellipse cx="100" cy="90" rx="30" ry="9" fill="#b45309"/><path d="M84 86 l8 8 M96 84 l8 8 M108 84 l8 8" stroke="#78350f" stroke-width="2"/>'),
+"Cash out (verb)":()=>svg(GR+'<rect x="20" y="14" width="72" height="104" rx="8" fill="#64748b"/><rect x="30" y="24" width="52" height="30" fill="#bbf7d0"/><text x="56" y="45" font-size="18" font-weight="700" fill="#166534" text-anchor="middle" font-family="sans-serif">$</text>'+
+  [0,1,2].map(r=>[0,1,2].map(c=>'<rect x="'+(34+c*14)+'" y="'+(60+r*9)+'" width="10" height="6" rx="1" fill="#cbd5e1"/>').join("")).join("")+
+  '<rect x="30" y="90" width="52" height="8" rx="2" fill="#0f172a"/><rect x="34" y="96" width="44" height="16" fill="#22c55e" stroke="#15803d" stroke-width="2"/><circle cx="56" cy="104" r="4" fill="#bbf7d0"/>'+
+  P(140,80,{c:"#f59e0b"})+line("M128 76 L84 102","#f59e0b",5)+'<circle cx="84" cy="103" r="4" fill="#f2c9a0"/><g transform="rotate(-18 172 34)"><rect x="160" y="26" width="28" height="15" fill="#22c55e" stroke="#15803d" stroke-width="2"/><circle cx="174" cy="33" r="4" fill="#bbf7d0"/></g>'),
+"Expats (noun)":()=>svg(GR+'<circle cx="46" cy="58" r="34" fill="#60a5fa"/><path d="M28 48 q8 -10 18 -4 q6 8 -4 12 q-8 0 -14 -8Z M52 62 q12 -4 16 6 q-2 12 -12 10 q-6 -8 -4 -16Z" fill="#6aa84f"/><circle cx="60" cy="42" r="5" fill="#ef4444"/><path d="M60 47 L60 56" stroke="#ef4444" stroke-width="2"/>'+
+  '<path d="M64 30 Q100 0 140 26" stroke="#64748b" stroke-width="2" stroke-dasharray="4 4" fill="none"/><g transform="translate(150 30) rotate(15)"><ellipse cx="0" cy="0" rx="22" ry="5" fill="#fff" stroke="#94a3b8" stroke-width="1.5"/><polygon points="-4,0 -14,-16 -6,-16 8,0" fill="#e2e8f0" stroke="#94a3b8"/><polygon points="-4,0 -14,14 -6,14 8,0" fill="#e2e8f0" stroke="#94a3b8"/></g>'+
+  P(130,84,{c:"#0d9488"})+'<rect x="150" y="92" width="24" height="18" rx="3" fill="#b45309"/><path d="M157 92 V88 H167 V92" stroke="#78350f" stroke-width="2" fill="none"/>'),
+Zionist:()=>svg(GR+'<path d="M128 18 V112" stroke="#6b7280" stroke-width="3"/><rect x="128" y="20" width="62" height="42" fill="#fff" stroke="#cbd5e1" stroke-width="1.5"/><rect x="128" y="25" width="62" height="6" fill="#1d4ed8"/><rect x="128" y="51" width="62" height="6" fill="#1d4ed8"/><polygon points="159,33 167.5,47.5 150.5,47.5" fill="none" stroke="#1d4ed8" stroke-width="1.6"/><polygon points="159,51 150.5,36.5 167.5,36.5" fill="none" stroke="#1d4ed8" stroke-width="1.6"/>'+
+  P(92,80,{c:"#2563eb"})+line("M101 72 L126 58","#2563eb",5)+'<circle cx="127" cy="57" r="4" fill="#f2c9a0"/>'),
+Pensioners:()=>svg(GR+'<rect x="40" y="56" width="120" height="8" rx="2" fill="#92400e"/>'+P(78,70,{c:"#7c3aed",hair:"#e5e7eb",m:"happy"})+P(124,70,{c:"#0ea5e9",hair:"#e5e7eb",sk:SK[3],m:"happy"})+'<rect x="40" y="90" width="120" height="9" rx="2" fill="#b45309"/><rect x="46" y="99" width="7" height="14" fill="#78350f"/><rect x="147" y="99" width="7" height="14" fill="#78350f"/>'+
+  '<path d="M100 84 q6 -8 12 0 L108 112" stroke="#78350f" stroke-width="3" fill="none" stroke-linecap="round"/>'+
+  '<rect x="144" y="14" width="40" height="26" rx="3" fill="#fff" stroke="#94a3b8" stroke-width="2"/><path d="M144 14 L164 30 L184 14" stroke="#94a3b8" stroke-width="2" fill="none"/><circle cx="34" cy="30" r="10" fill="#fbbf24" stroke="#b45309" stroke-width="2"/><text x="34" y="35" font-size="13" font-weight="700" text-anchor="middle" fill="#92400e" font-family="sans-serif">$</text><circle cx="58" cy="20" r="8" fill="#fbbf24" stroke="#b45309" stroke-width="2"/>'),
+Fluent:()=>svg(GR+P(40,82,{c:"#0ea5e9",m:"talk"})+
+  '<rect x="70" y="14" width="46" height="22" rx="8" fill="#bfdbfe" stroke="#3b82f6" stroke-width="2"/><text x="93" y="29" font-size="11" text-anchor="middle" fill="#1e3a8a" font-family="sans-serif" font-weight="700">Hello</text>'+
+  '<rect x="112" y="46" width="58" height="22" rx="8" fill="#fbcfe8" stroke="#ec4899" stroke-width="2"/><text x="141" y="61" font-size="11" text-anchor="middle" fill="#831843" font-family="sans-serif" font-weight="700">Bonjour</text>'+
+  '<rect x="140" y="80" width="48" height="22" rx="8" fill="#fef08a" stroke="#eab308" stroke-width="2"/><text x="164" y="95" font-size="11" text-anchor="middle" fill="#713f12" font-family="sans-serif" font-weight="700">Hola</text>'+
+  '<circle cx="58" cy="58" r="3" fill="#3b82f6"/><circle cx="66" cy="48" r="4" fill="#3b82f6"/><path d="M96 38 C104 44 108 46 118 52 M144 70 C148 76 150 78 156 82" stroke="#94a3b8" stroke-width="2" stroke-dasharray="3 3" fill="none"/>'),
+Superphotogenic:()=>svg(GR+P(66,80,{c:"#ec4899",extra:'<rect x="-9" y="-27" width="18" height="6" rx="3" fill="#111"/>'})+
+  '<rect x="136" y="62" width="48" height="34" rx="5" fill="#374151"/><rect x="146" y="56" width="16" height="8" rx="2" fill="#374151"/><circle cx="160" cy="79" r="11" fill="#111827" stroke="#9ca3af" stroke-width="3"/><circle cx="160" cy="79" r="4" fill="#60a5fa"/><polygon points="116,50 122,58 132,54 126,62 134,70 124,68 120,78 116,68 106,72 112,62 104,54 114,56" fill="#fde047"/>'+
+  ['M34 28 l3 8 8 3 -8 3 -3 8 -3 -8 -8 -3 8 -3Z','M100 26 l2 6 6 2 -6 2 -2 6 -2 -6 -6 -2 6 -2Z','M34 66 l2 6 6 2 -6 2 -2 6 -2 -6 -6 -2 6 -2Z'].map(d=>'<path d="'+d+'" fill="#f59e0b"/>').join("")),
+Beleaguered:()=>svg(GR+'<defs><marker id="ah" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8Z" fill="#ef4444"/></marker></defs>'+
+  '<ellipse cx="100" cy="22" rx="30" ry="12" fill="#94a3b8"/><polygon points="98,30 108,30 102,42 110,42 96,58 100,46 92,46" fill="#fbbf24"/>'+
+  '<rect x="12" y="20" width="24" height="40" rx="5" fill="#111827"/><rect x="16" y="26" width="16" height="24" fill="#93c5fd"/><path d="M42 30 q5 5 0 10 M46 26 q9 9 0 18" stroke="#ef4444" stroke-width="2" fill="none"/>'+
+  '<rect x="156" y="20" width="30" height="8" fill="#fff" stroke="#94a3b8"/><rect x="158" y="30" width="30" height="8" fill="#fff" stroke="#94a3b8"/><rect x="154" y="40" width="30" height="8" fill="#fff" stroke="#94a3b8"/><rect x="157" y="50" width="30" height="8" fill="#fff" stroke="#94a3b8"/>'+
+  P(100,84,{c:"#475569",m:"worried"})+'<path d="M112 56 q3 5 0 7 q-3 -2 0 -7z" fill="#60a5fa"/>'+
+  '<path d="M16 110 L70 92" stroke="#ef4444" stroke-width="3" marker-end="url(#ah)"/><path d="M184 110 L130 92" stroke="#ef4444" stroke-width="3" marker-end="url(#ah)"/><path d="M52 64 L78 74" stroke="#ef4444" stroke-width="3" marker-end="url(#ah)"/><path d="M150 64 L124 74" stroke="#ef4444" stroke-width="3" marker-end="url(#ah)"/>')
+};
+
+/* ---------------- DATA ---------------- */
+const WORDS=[
+{w:"Discriminate",d:"to treat a person or group unfairly because of their race, sex, religion or age"},
+{w:"Diverse",d:"made up of many different types of people or things"},
+{w:"Inhibit",d:"to prevent something from happening or developing, or to slow it down"},
+{w:"Intervene",d:"to become involved in a situation in order to change it or stop it"},
+{w:"Rational",d:"based on clear thought and reason rather than emotion"},
+{w:"Superimpose",d:"to put one image or object on top of another so that both can still be seen"},
+{w:"Poignant",d:"causing a strong feeling of sadness or sympathy"},
+{w:"Rift",d:"a serious break in a relationship, or a split between people or groups"},
+{w:"Vignettes",d:"short descriptions or scenes that show a small part of a story, a person or a period of time"},
+{w:"Wizened",d:"looking small, dried up and wrinkled, especially because of old age"},
+{w:"Collectives",d:"businesses or farms owned and run by a group of people who share the work and the profits"},
+{w:"Broil out (verb)",d:"to cook something with extremely radiant heat"},
+{w:"Cash out (verb)",d:"to exchange an asset for money"},
+{w:"Expats (noun)",d:"people who live in a country that is not their own"},
+{w:"Zionist",d:"a supporter of Zionism, the movement for a Jewish homeland in Israel"},
+{w:"Pensioners",d:"people who receive regular money from the state or a former employer after retiring from work"},
+{w:"Fluent",d:"able to speak or write a language easily, well and quickly"},
+{w:"Superphotogenic",d:"looking extremely attractive in photographs"},
+{w:"Beleaguered",d:"experiencing many problems or a lot of criticism; under pressure from all sides"}
+];
+const N=WORDS.length, TOTAL=N*2;
+const BASE=[7,2,15,0,11,18,4,9,13,1,16,6,10,3,17,8,14,5,12];
+const AVATARS=["🦁","🐼","🦊","🐯","🐸","🦄","🐧","🐬","🦉","🐙","🚀","⚽"];
+
+/* ---------------- SETTINGS ---------------- */
+const QTIME=window.__QTIME||10000;     // 10 seconds per question
+const TUP=900;                         // "time's up" sign duration
+const GRACE_MS=window.__GRACE||30000;  // a student who leaves the page may return once within 30 s (screen lock). Set to 0 for strict mode.
+const MAX_LEAVES=GRACE_MS>0?1:0;
+const LOCAL_PASS="teacher";            // teacher passcode in PREVIEW mode only (live mode uses ADMIN_PASS in Code.gs)
+
+/* ---------------- HELPERS ---------------- */
+const $=s=>document.querySelector(s);
+const app=$("#app");
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const norm=n=>String(n).replace(/^[=+\-@\s]+/,"").trim().toLowerCase().replace(/\s+/g," ");
+const mem={};
+function store(k,v){
+  try{
+    if(v===undefined){const x=localStorage.getItem(k);return x?JSON.parse(x):null}
+    if(v===null){localStorage.removeItem(k);return}
+    localStorage.setItem(k,JSON.stringify(v));
+  }catch(e){ if(v===undefined)return mem[k]===undefined?null:mem[k]; mem[k]=v; }
+}
+function seedOf(s){let h=5381;for(let i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))|0;return h>>>0}
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function fmtTime(s){const m=Math.floor(s/60);return m+":"+String(s%60).padStart(2,"0")}
+async function copyText(t,btn){
+  try{await navigator.clipboard.writeText(t)}catch(e){
+    const ta=document.createElement("textarea");ta.value=t;document.body.appendChild(ta);ta.select();
+    try{document.execCommand("copy")}catch(_){}ta.remove();
+  }
+  if(btn){const o=btn.textContent;btn.textContent="Copied ✓";setTimeout(()=>btn.textContent=o,1500)}
+}
+
+/* ---------------- BACKEND (Google Apps Script) or PREVIEW (this device only) ---------------- */
+const HAS_GAS=typeof google!=="undefined"&&google.script&&google.script.run;
+function gas(fn,...args){return new Promise((res,rej)=>{google.script.run.withSuccessHandler(res).withFailureHandler(rej)[fn](...args)})}
+const LK="fc3_rows";
+const lrows=()=>store(LK)||{};
+const localApi={
+  async join(name,cls,avatar){
+    const rows=lrows();name=String(name).replace(/^[=+\-@\s]+/,"").replace(/\s+/g," ").trim().slice(0,30);
+    const key=cls+"|"+norm(name);
+    if(rows[key])return{created:false,row:rows[key]};
+    const slots=Object.values(rows).filter(r=>r.cls===cls).map(r=>r.slot);
+    const slot=slots.length?Math.max(...slots)+1:0;
+    const now=Date.now();
+    const row={key,name,cls,avatar,slot,status:"playing",score:0,pic:0,answered:0,time:0,leaves:0,reason:"",startedAt:now,updatedAt:now,hiddenAt:0,closed:0,qStart:0,ans:[]};
+    rows[key]=row;store(LK,rows);return{created:true,row};
+  },
+  async update(key,p){
+    const rows=lrows();const r=rows[key];if(!r)return null;
+    if(r.status!=="playing")return r;
+    ["status","score","pic","answered","time","leaves","reason","hiddenAt","closed","qStart","ans"].forEach(f=>{if(p[f]!==undefined)r[f]=p[f]});
+    r.updatedAt=Date.now();store(LK,rows);return r;
+  },
+  async admin(pass){if(pass!==LOCAL_PASS)return{error:"wrong"};return{rows:Object.values(lrows()),now:Date.now()}},
+  async reset(pass,key){if(pass!==LOCAL_PASS)return false;const rows=lrows();delete rows[key];store(LK,rows);return true}
+};
+const api=HAS_GAS?{
+  join:(n,c,a)=>gas("apiJoin",n,c,a),
+  update:(k,p)=>gas("apiUpdate",k,p),
+  admin:p=>gas("apiAdmin",p),
+  reset:(p,k)=>gas("apiReset",p,k)
+}:localApi;
+
+/* ---------------- QUESTIONS (unique order per student) ----------------
+   Each student gets a "slot" (0,1,2…) inside their class. Slot decides which word they start with,
+   so two students of the same class are never on the same word at the same time (up to 19 students per class).
+   Every word: picture question first, then its definition question. */
+function wordOrder(cls,slot){
+  const block=Math.floor(slot/N),off=slot%N;
+  let step=(block+1)*(cls==="10A"?1:-1);step=((step%N)+N)%N;
+  const out=[];for(let i=0;i<N;i++)out.push(BASE[(off+step*i)%N]);return out;
+}
+function buildQs(cls,slot,key){
+  const rng=mulberry32(seedOf(key+"#"+slot));
+  const sh=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+  const qs=[];
+  wordOrder(cls,slot).forEach(w=>["pic","def"].forEach(type=>{
+    const others=sh([...Array(N).keys()].filter(x=>x!==w)).slice(0,2);
+    qs.push({type,w,opts:sh([w,...others])});
+  }));
+  return qs;
+}
+function calc(ans,qs){let score=0,pic=0;ans.forEach((k,i)=>{const q=qs[i];if(q&&k>=0&&q.opts[k]===q.w){score++;if(q.type==="pic")pic++}});return{score,pic}}
+
+/* ---------------- ATTEMPT STATE ---------------- */
+let A=null,quizOn=false,draft={};
+function mk(row){
+  return{key:row.key,name:row.name,cls:row.cls,avatar:row.avatar,slot:row.slot,qs:buildQs(row.cls,row.slot,row.key),
+    ans:(row.ans||[]).slice(),qStart:row.qStart||0,startedAt:row.startedAt||Date.now(),leaves:row.leaves||0,hiddenAt:row.hiddenAt||0,
+    closed:row.closed?1:0,tt:(row.time||0)*1000,status:row.status,reason:row.reason||"",sent:row.sent||0,warn:0,busy:false};
+}
+function snap(a){
+  const c=calc(a.ans,a.qs);
+  return{key:a.key,name:a.name,cls:a.cls,avatar:a.avatar,slot:a.slot,status:a.status,reason:a.reason,ans:a.ans,answered:a.ans.length,
+    score:c.score,pic:c.pic,time:Math.round(a.tt/1000),leaves:a.leaves,hiddenAt:a.hiddenAt,closed:a.closed?1:0,qStart:a.qStart,startedAt:a.startedAt,sent:a.sent||0};
+}
+const persist=()=>{if(A)store("fc3_me",snap(A))};
+let pumping=false,dirty=false;
+function sync(){dirty=true;pump()}
+async function pump(){
+  if(pumping)return;pumping=true;
+  while(dirty&&A&&A.status==="playing"){
+    dirty=false;
+    try{await api.update(A.key,snap(A))}catch(e){dirty=true;await sleep(3000)}
+  }
+  pumping=false;
+}
+async function pushFinal(){ // finished or out: retry until the server has it (Wi-Fi problems)
+  const a=A;
+  for(let t=0;t<200&&!a.sent;t++){
+    try{await api.update(a.key,snap(a));a.sent=1;persist();break}catch(e){await sleep(3000)}
+  }
+  const el=$("#sent");if(el&&A===a)showSent(el);
+}
+
+/* ---------------- STUDENT SCREENS ---------------- */
+function viewStart(err){
+  app.innerHTML=`
+  <h1>📚 Vocabulary Flashcards</h1>
+  <p class="muted">Grade 10 · ${TOTAL} questions · ${QTIME/1000} seconds each · <b>one attempt only</b></p>
+  ${HAS_GAS?"":`<div class="note warn">Preview mode: results stay on this device only. Teacher passcode: <b>${LOCAL_PASS}</b></div>`}
+  <div class="card">
+    <label class="f" for="nm">Your name</label>
+    <input id="nm" type="text" maxlength="30" autocomplete="off" placeholder="Type your full name" value="${esc(draft.name||"")}">
+    <label class="f">Pick your avatar</label>
+    <div class="avatars">${AVATARS.map(a=>`<button type="button" class="av${draft.avatar===a?" sel":""}" data-a="${a}" aria-label="avatar ${a}">${a}</button>`).join("")}</div>
+    <label class="f">Your class</label>
+    <div class="seg">
+      <button type="button" class="choice${draft.cls==="10A"?" sel":""}" data-c="10A">10A</button>
+      <button type="button" class="choice${draft.cls==="10B"?" sel":""}" data-c="10B">10B</button>
+    </div>
+    <div class="err" id="err">${err||""}</div>
+    <button class="btn" id="go">Continue</button>
+  </div>
+  <div class="center"><button class="link" id="teacher">Teacher area</button></div>`;
+  const keep=()=>{draft.name=$("#nm").value};
+  document.querySelectorAll(".av").forEach(b=>b.onclick=()=>{keep();draft.avatar=b.dataset.a;viewStart()});
+  document.querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>{keep();draft.cls=b.dataset.c;viewStart()});
+  $("#teacher").onclick=()=>viewAdminGate();
+  $("#go").onclick=()=>{
+    keep();
+    const name=draft.name.trim();
+    if(name.length<2)return viewStart("Please type your name.");
+    if(!draft.avatar)return viewStart("Please pick an avatar.");
+    if(!draft.cls)return viewStart("Please choose 10A or 10B.");
+    viewRules();
+  };
+}
+function viewRules(err){
+  app.innerHTML=`
+  <h1>Before you start</h1>
+  <div class="card">
+    <p><b>${draft.avatar} ${esc(draft.name.trim())}</b> · ${draft.cls}</p>
+    <ul class="rules">
+      <li>⏱️ You get <b>${QTIME/1000} seconds</b> for each of the ${TOTAL} questions. When time runs out the question counts as unanswered.</li>
+      <li>🚫 <b>Do not leave this page.</b> Closing the tab, refreshing, or switching to another tab or app puts you <b>out of the quiz</b>.</li>
+      ${GRACE_MS>0?`<li>🔒 If your screen locks by accident, come back within ${GRACE_MS/1000} seconds. This works <b>once</b> only, and the questions you missed count as unanswered.</li>`:""}
+      <li>1️⃣ You have <b>one attempt</b>. Your teacher sees your result as soon as you finish.</li>
+    </ul>
+    <div class="err" id="err">${err||""}</div>
+    <button class="btn" id="start">I'm ready — Start! 🚀</button>
+    <button class="btn ghost" id="back">← Back</button>
+  </div>`;
+  $("#back").onclick=()=>viewStart();
+  $("#start").onclick=async e=>{
+    e.target.disabled=true;e.target.textContent="Connecting…";
+    let res;
+    try{res=await api.join(draft.name.trim(),draft.cls,draft.avatar)}
+    catch(x){return viewRules("Can't reach the server. Check your Wi-Fi and try again.")}
+    handleRow(res.row,res.created);
+  };
+}
+function decide(row){ // for a row that is still "playing" when someone comes back to it
+  const away=Date.now()-(row.hiddenAt||0);
+  return (!row.closed&&row.hiddenAt&&away<=GRACE_MS&&(row.leaves||0)<=MAX_LEAVES)?"resume":"out";
+}
+function handleRow(row,created){
+  if(created){A=mk(row);return beginQuiz()}
+  if(row.status==="finished"){A=mk(row);A.sent=1;return viewResult(A,true)}
+  if(row.status==="out"){A=mk(row);A.sent=1;return viewOut(A)}
+  if(decide(row)==="resume"){A=mk(row);return resumeQuiz()}
+  A=mk(row);goOut("Closed the quiz or left the page and came back");
+}
+function beginQuiz(){
+  quizOn=true;A.status="playing";A.qStart=Date.now();persist();sync();keepAwake();renderQ();
+}
+async function keepAwake(){try{if(navigator.wakeLock)await navigator.wakeLock.request("screen")}catch(e){}}
+function resumeQuiz(){
+  quizOn=true;A.hiddenAt=0;A.warn=1;catchUp();persist();sync();keepAwake();
+  if(A.ans.length>=TOTAL)return finish();
+  renderQ();
+}
+function catchUp(){ // questions whose time ran out while the screen was locked count as unanswered
+  const el=Date.now()-A.qStart;
+  if(!A.qStart||el<QTIME)return;
+  const n=Math.max(1,Math.floor((el+TUP)/(QTIME+TUP)));
+  for(let i=0;i<n&&A.ans.length<TOTAL;i++){A.ans.push(-1);A.tt+=QTIME}
+  A.qStart=Date.now();
+}
+function renderQ(){
+  const i=A.ans.length,q=A.qs[i],isPic=q.type==="pic";
+  app.innerHTML=`
+  <div class="topbar"><span>${A.avatar} ${esc(A.name)} · ${A.cls}</span><span>${i+1} / ${TOTAL}</span></div>
+  <div class="bar"><i style="width:${Math.round(i/TOTAL*100)}%"></i></div>
+  ${A.warn?`<div class="note warn">⚠️ You left the page. That was your one chance — leaving again puts you out.</div>`:""}
+  <div class="card">
+    <div class="up" id="up">⏰ Time's up!<small>Moving on…</small></div>
+    <span class="tag">${isPic?"Picture · Which word is this?":"Meaning · Choose the definition"}</span>
+    <div class="tline"><div class="tbar"><i id="tb"></i></div><div class="tnum" id="tn">${QTIME/1000}</div></div>
+    ${isPic?`<div class="pic">${ART[WORDS[q.w].w]()}</div>`:`<div class="word">${esc(WORDS[q.w].w)}</div>`}
+    <div class="opts">
+      ${q.opts.map((o,k)=>`<button class="opt${isPic?"":" def"}" data-k="${k}">${esc(isPic?WORDS[o].w:WORDS[o].d)}</button>`).join("")}
+    </div>
+  </div>`;
+  A.busy=false;
+  document.querySelectorAll(".opt").forEach(b=>b.onclick=()=>answer(+b.dataset.k));
+  tick();
+}
+function tick(){
+  if(!quizOn||!A||A.status!=="playing"||A.busy||document.hidden)return;
+  const rem=QTIME-(Date.now()-A.qStart);
+  const bar=$("#tb"),tn=$("#tn");
+  if(bar){bar.style.width=Math.max(0,rem/QTIME*100)+"%";bar.className=rem<=3000?"low":rem<=5500?"mid":""}
+  if(tn)tn.textContent=Math.max(0,Math.ceil(rem/1000));
+  if(rem<=0)timeUp();
+}
+setInterval(tick,100);
+function answer(k){
+  if(A.busy||A.status!=="playing")return;
+  A.busy=true;A.tt+=Math.min(QTIME,Date.now()-A.qStart);A.ans.push(k);persist();
+  document.querySelectorAll(".opt").forEach((b,i)=>{b.disabled=true;if(i===k)b.classList.add("pick")});
+  setTimeout(nextQ,350);
+}
+function timeUp(){
+  A.busy=true;A.tt+=QTIME;A.ans.push(-1);persist();
+  const up=$("#up");if(up)up.style.display="flex";
+  document.querySelectorAll(".opt").forEach(b=>b.disabled=true);
+  setTimeout(nextQ,TUP);
+}
+function nextQ(){
+  if(!A||A.status!=="playing")return;
+  if(A.ans.length>=TOTAL)return finish();
+  A.qStart=Date.now();persist();sync();renderQ();
+}
+function finish(){
+  quizOn=false;A.status="finished";A.busy=false;persist();
+  viewResult(A);pushFinal();
+}
+function goOut(reason){
+  quizOn=false;A.status="out";A.reason=reason;A.busy=false;persist();
+  viewOut(A);pushFinal();
+}
+
+/* leaving the page while the quiz is running */
+document.addEventListener("visibilitychange",()=>{
+  if(!quizOn||!A)return;
+  if(document.hidden){
+    if(A.status!=="playing")return;
+    A.hiddenAt=Date.now();A.leaves++;persist();
+    if(A.leaves>MAX_LEAVES){A.status="out";A.reason="Switched tab/app (left the quiz page)";persist();api.update(A.key,snap(A)).then(()=>{A.sent=1;persist()}).catch(()=>{})}
+    else sync();
+  }else{
+    if(A.status==="out")return goOut(A.reason||"Left the quiz page");
+    if(A.status!=="playing")return;
+    const away=Date.now()-A.hiddenAt;
+    if(away<1500){A.leaves=Math.max(0,A.leaves-1);A.hiddenAt=0;persist();sync();return}
+    if(away>GRACE_MS)return goOut("Left the quiz page for too long");
+    A.hiddenAt=0;A.warn=1;catchUp();persist();sync();
+    if(A.ans.length>=TOTAL)return finish();
+    if(!A.busy)renderQ();
+  }
+});
+window.addEventListener("pagehide",()=>{
+  if(quizOn&&A&&A.status==="playing"){A.closed=1;persist();try{api.update(A.key,snap(A))}catch(e){}}
+});
+
+function viewOut(a){
+  app.innerHTML=`
+  <h1 class="center">🚫 You're out of the quiz</h1>
+  <div class="card center">
+    <p>${a.avatar} <b>${esc(a.name)}</b> · ${a.cls}</p>
+    <p>Leaving the quiz page (closing it, refreshing, or switching tab/app) ends the attempt.</p>
+    <p class="muted">Your teacher has been notified. Each student has one attempt.</p>
+    <div id="sent" class="note"></div>
+  </div>
+  <div class="center"><button class="link" id="nxt">Not you? Next student</button></div>`;
+  showSent($("#sent"));
+  $("#nxt").onclick=()=>{store("fc3_me",null);A=null;draft={};viewStart()};
+}
+function showSent(el){
+  const a=A;if(!el||!a)return;
+  if(!HAS_GAS){el.className="note warn";el.textContent="Preview mode: saved on this device only.";return}
+  if(a.sent){el.className="note ok";el.textContent="✅ Your teacher has received your result.";}
+  else{el.className="note";el.textContent="Sending your result to your teacher… keep this page open."}
+}
+function reviewHTML(a){
+  const items=[];
+  a.ans.forEach((k,i)=>{
+    const q=a.qs[i];if(!q)return;
+    if(k>=0&&q.opts[k]===q.w)return;
+    const W=WORDS[q.w];
+    const yours=k<0?`<span class="chip warn">⏰ No answer</span>`:`Your answer: ${esc(q.type==="pic"?WORDS[q.opts[k]].w:WORDS[q.opts[k]].d)}`;
+    if(q.type==="pic"){
+      items.push(`<div class="rv"><span class="tag">Picture</span><div class="pic mini">${ART[W.w]()}</div><div class="yours">${yours}</div><div class="right">✔ Correct: ${esc(W.w)}</div><div class="muted">${esc(W.w)} — ${esc(W.d)}</div></div>`);
+    }else{
+      items.push(`<div class="rv"><span class="tag">Meaning</span><div style="font-size:1.3rem;font-weight:800;margin-top:6px">${esc(W.w)}</div><div class="yours">${yours}</div><div class="right">✔ Correct: ${esc(W.d)}</div></div>`);
+    }
+  });
+  return items;
+}
+function viewResult(a,already){
+  const c=calc(a.ans,a.qs),time=Math.round(a.tt/1000)||0;
+  const pct=Math.round(c.score/TOTAL*100);
+  const noans=a.ans.filter(k=>k<0).length;
+  const msg=pct>=90?"Outstanding! 🌟":pct>=75?"Great job! 👏":pct>=50?"Good effort — keep practising! 💪":"Keep going — review the questions below! 📖";
+  const rv=reviewHTML(a);
+  app.innerHTML=`
+  <h1 class="center">${a.avatar} ${esc(a.name)}</h1>
+  <p class="center muted">Class ${a.cls} · Time ${fmtTime(time)}</p>
+  ${already?`<div class="note center">You have already taken this quiz — here is your result. Each student has one attempt.</div>`:""}
+  <div class="card center">
+    <div class="score">${c.score} / ${TOTAL}</div>
+    <p><b>${msg}</b> (${pct}%)</p>
+    <p class="muted">Pictures: ${c.pic} / ${N} · Meanings: ${c.score-c.pic} / ${N}${noans?` · Unanswered: ${noans}`:""}</p>
+    <div id="sent" class="note"></div>
+  </div>
+  ${rv.length?`<h2>📖 Questions to review (${rv.length})</h2>${rv.join("")}`:`<div class="card center"><h2>Perfect! 🏆</h2><p class="muted">You answered every question correctly.</p></div>`}
+  <div class="center"><button class="link" id="nxt">Not you? Next student</button></div>`;
+  showSent($("#sent"));
+  $("#nxt").onclick=()=>{store("fc3_me",null);A=null;draft={};viewStart()};
+}
+
+/* ---------------- TEACHER AREA ---------------- */
+let adm={pass:"",tab:"All",rows:[],now:0,open:{},timer:null};
+function stopAdmin(){if(adm.timer){clearInterval(adm.timer);adm.timer=null}}
+function viewAdminGate(err){
+  stopAdmin();
+  app.innerHTML=`
+  <h1>🔒 Teacher area</h1>
+  <div class="card">
+    <p class="muted">Enter your teacher passcode.</p>
+    <input id="pw" type="password" autocomplete="off" placeholder="Passcode">
+    <div class="err">${err||""}</div>
+    <button class="btn" id="ok">Open</button>
+    <button class="btn ghost" id="back">← Back</button>
+  </div>`;
+  $("#back").onclick=()=>viewStart();
+  $("#ok").onclick=async e=>{
+    const p=$("#pw").value;e.target.disabled=true;
+    try{const r=await api.admin(p);if(r&&r.rows){adm.pass=p;adm.rows=r.rows;adm.now=r.now||Date.now();renderAdmin();adm.timer=setInterval(refreshAdmin,6000)}else viewAdminGate("Wrong passcode.")}
+    catch(x){viewAdminGate("Can't reach the server.")}
+  };
+}
+async function refreshAdmin(){
+  try{const r=await api.admin(adm.pass);if(r&&r.rows){adm.rows=r.rows;adm.now=r.now||Date.now();renderAdmin()}}catch(e){}
+}
+function missedList(r){
+  try{
+    const qs=buildQs(r.cls,r.slot,r.key),out=[];
+    (r.ans||[]).forEach((k,i)=>{const q=qs[i];if(q&&!(k>=0&&q.opts[k]===q.w)){const nm=WORDS[q.w].w+(k<0?" (no answer)":"");if(!out.includes(nm))out.push(nm)}});
+    return out;
+  }catch(e){return[]}
+}
+function renderAdmin(){
+  const rows=adm.rows,tab=adm.tab;
+  const inTab=r=>tab==="All"||r.cls===tab;
+  const fin=rows.filter(r=>r.status==="finished"&&inTab(r)).sort((a,b)=>b.score-a.score||a.time-b.time);
+  const play=rows.filter(r=>r.status==="playing"&&inTab(r));
+  const out=rows.filter(r=>r.status==="out"&&inTab(r));
+  const top=fin.slice(0,3),rest=fin.slice(3);
+  const pod=(r,i)=>r?`<div class="pod p${i+1}"><div class="m">${["🥇","🥈","🥉"][i]}</div><div class="a">${esc(r.avatar)}</div><div class="n">${esc(r.name)}</div><div class="muted">${r.cls} · ${fmtTime(r.time)}</div><div class="s">${r.score}/${TOTAL}</div></div>`:`<div></div>`;
+  const rowHTML=(r,rank)=>`<details data-k="${esc(r.key)}" ${adm.open[r.key]?"open":""}><summary class="lb"><span class="r">${rank}</span><span class="a">${esc(r.avatar)}</span><span class="n">${esc(r.name)} <span class="muted">${r.cls}</span></span><span class="muted">${fmtTime(r.time)}</span><span class="s">${r.score}/${TOTAL}</span></summary><div class="det">${(()=>{const m=missedList(r);return m.length?`<b>Missed:</b> ${m.map(esc).join(", ")}`:"No mistakes 🎉"})()}<div style="margin-top:8px"><button class="btn sm ghost" data-reset="${esc(r.key)}">Allow retake</button></div></div></details>`;
+  app.innerHTML=`
+  <h1>🏆 Live results</h1>
+  <p class="muted">${HAS_GAS?"Updates every few seconds":"Preview mode · this device only"} · ${fin.length} finished · ${play.length} playing · ${out.length} out</p>
+  <div class="tabs">${["All","10A","10B"].map(t=>`<button data-t="${t}" class="${t===tab?"on":""}">${t}</button>`).join("")}</div>
+  ${fin.length?`<div class="podium">${pod(top[1],1)}${pod(top[0],0)}${pod(top[2],2)}</div>
+    <div class="card" style="padding:6px 14px">${top.map((r,i)=>rowHTML(r,i+1)).join("")}${rest.map((r,i)=>rowHTML(r,i+4)).join("")}</div>`
+   :`<div class="card center muted">Nobody has finished yet.</div>`}
+  ${play.length?`<div class="sec">▶️ Playing now (${play.length})</div><div class="card" style="padding:8px 14px">${play.map(r=>{
+     const idle=(adm.now-(r.updatedAt||0))>120000;
+     return `<div style="padding:8px 0"><div class="lb" style="padding:0"><span class="a">${esc(r.avatar)}</span><span class="n">${esc(r.name)} <span class="muted">${r.cls}</span></span><span class="muted">Q ${r.answered}/${TOTAL}</span>${r.leaves?`<span class="chip warn">left ${r.leaves}×</span>`:""}${idle?`<span class="chip bad">inactive</span>`:""}</div><div class="prog"><i style="width:${Math.round((r.answered||0)/TOTAL*100)}%"></i></div></div>`}).join("")}</div>`:""}
+  ${out.length?`<div class="sec">🚫 Out of the quiz (${out.length})</div><div class="card" style="padding:8px 14px">${out.map(r=>`<div class="lb"><span class="a">${esc(r.avatar)}</span><span class="n">${esc(r.name)} <span class="muted">${r.cls}</span><div class="muted">${esc(r.reason||"Left the page")} · Q ${r.answered}/${TOTAL}</div></span><button class="btn sm ghost" data-reset="${esc(r.key)}">Allow retake</button></div>`).join("")}</div>`:""}
+  <div class="row" style="margin-top:14px">${fin.length?`<button class="btn sm ghost" id="cpy">Copy ranking as text</button>`:""}</div>
+  <div class="center"><button class="link" id="out">Leave teacher area</button></div>`;
+  document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{adm.tab=b.dataset.t;renderAdmin()});
+  document.querySelectorAll("details").forEach(d=>d.addEventListener("toggle",()=>{adm.open[d.dataset.k]=d.open}));
+  document.querySelectorAll("[data-reset]").forEach(b=>b.onclick=async e=>{
+    e.stopPropagation();
+    if(b.dataset.sure){try{await api.reset(adm.pass,b.dataset.reset)}catch(x){} refreshAdmin()}
+    else{b.dataset.sure="1";b.textContent="Tap again to confirm"}
+  });
+  if($("#cpy"))$("#cpy").onclick=e=>copyText(fin.map((r,i)=>`${i+1}. ${r.name} (${r.cls}) - ${r.score}/${TOTAL} - ${fmtTime(r.time)}`).join("\n"),e.target);
+  $("#out").onclick=()=>{stopAdmin();viewStart()};
+}
+
+/* ---------------- START ---------------- */
+(function init(){
+  const me=store("fc3_me");
+  if(!me){return viewStart()}
+  if(me.status==="finished"){A=mk(me);A.sent=me.sent||0;viewResult(A,true);if(!A.sent)pushFinal();return}
+  if(me.status==="out"){A=mk(me);A.sent=me.sent||0;viewOut(A);if(!A.sent)pushFinal();return}
+  if(me.status==="playing"){
+    A=mk(me);
+    if(decide(me)==="resume")return resumeQuiz();
+    return goOut("Closed the quiz or left the page and came back");
+  }
+  viewStart();
+})();
+</script>
+</body>
+</html>
